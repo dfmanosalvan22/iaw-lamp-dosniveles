@@ -19,7 +19,8 @@ El proyecto contiene los siguientes archivos:
 - `Vagrantfile`: define las máquinas virtuales, sus IPs, hostnames y aprovisionamiento.  
 - `aprov_apache.sh`: script para configurar el servidor Apache y PHP, instalar dependencias y desplegar la aplicación.  
 - `aprov_mysql.sh`: script para configurar MariaDB, crear la base de datos y el usuario, y definir permisos.  
-- `README.md`: este documento explica la práctica, los scripts y cómo verificar el entorno.  
+- `README.md`: este documento explica la práctica, los scripts y cómo verificar el entorno.
+- `media/`: carpeta que contiene capturas de pantalla mostrando el estado de Apache, MariaDB, la aplicación desplegada y un video de verificación. 
 
 ---
 
@@ -124,4 +125,4 @@ sudo systemctl restart mariadb
 ![Aplicación funcionando](media/pagina_verificacion.png)
 
 ### Screencast de la aplicación
-Puedes ver el funcionamiento de la aplicación en este [video en YouTube](https://youtu.be/6ee68w6q2vY).
+Se puede ver el funcionamiento de la aplicación en este [video en YouTube](https://youtu.be/6ee68w6q2vY).
