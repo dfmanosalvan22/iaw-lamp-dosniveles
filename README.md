@@ -111,16 +111,17 @@ sudo systemctl restart mariadb
 
 ### Apache
 #### Estado:
-<img width="1041" height="417" alt="imagen" src="https://github.com/user-attachments/assets/4aa9771e-3284-4dba-af1c-ec7e4a85a454" />
+![Estado Apache](media/estado_apache.png)
 
 #### Conexion desde Apache a MariaDB:
-<img width="732" height="507" alt="imagen" src="https://github.com/user-attachments/assets/57dabfb6-ed61-4940-9edf-0de8d36e04cf" />
+![Conexión Apache a MariaDB](media/apache_accesodb.png)
 
 ### MariaDB
 #### Estado:
-<img width="1442" height="416" alt="imagen" src="https://github.com/user-attachments/assets/8000c430-d75b-41b9-aa91-30c963e405be" />
+![Estado MariaDB](media/estado_mariadb.png)
 
 ### Acceso a la aplicacion:
-<img width="1393" height="545" alt="imagen" src="https://github.com/user-attachments/assets/5d88bdfe-88e4-440d-8635-02f981cea0bf" />
+![Aplicación funcionando](media/pagina_verificacion.png)
 
-
+### Screencast de la aplicación
+Puedes ver el funcionamiento de la aplicación en este [video en YouTube](https://youtu.be/6ee68w6q2vY).
