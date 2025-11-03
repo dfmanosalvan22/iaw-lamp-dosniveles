@@ -6,7 +6,7 @@ David Felipe Manosalva Niño
 
 ## Objetivo
 
-El objetivo de esta práctica es montar una infraestructura **LAMP (Linux, Apache, MySQL/MariaDB, PHP)** en **dos niveles** utilizando **Vagrant**. La aplicación que se despliega es un sistema de gestión de usuarios descargable desde [este enlace](https://informatica.iesalbarregas.com/mod/url/view.php?id=4382).
+El objetivo de esta práctica es montar una infraestructura **LAMP (Linux, Apache, MySQL/MariaDB, PHP)** en **dos niveles** utilizando **Vagrant**. La aplicación que se despliega es un sistema de gestión de usuarios descargable desde [este enlace](https://github.com/josejuansanchez/iaw-practica-lamp ).
 
 Se busca que, tras ejecutar `vagrant up`, la infraestructura esté lista, la aplicación esté desplegada correctamente y sea accesible desde un navegador.
 
