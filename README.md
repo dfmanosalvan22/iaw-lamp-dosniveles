@@ -12,7 +12,7 @@ Se busca que, tras ejecutar `vagrant up`, la infraestructura esté lista, la apl
 
 ---
 
-## 2. Estructura del Proyecto
+## Estructura del Proyecto
 
 El proyecto contiene los siguientes archivos:
 
@@ -22,3 +22,105 @@ El proyecto contiene los siguientes archivos:
 - `README.md`: este documento explica la práctica, los scripts y cómo verificar el entorno.  
 
 ---
+
+## Aprovisionamiento de Apache (`aprov_apache.sh`)
+
+```bash
+#!/bin/bash
+set -e  #Permite que el script se detenga si cualquier comando falla
+
+#Se actualizan los paquetes disponibles
+sudo apt update -y
+
+#Se instala Apache, PHP, las librerías necesarias para MariaDB, Git y el cliente de MariaDB
+sudo apt install -y apache2 php libapache2-mod-php php-mysql git mariadb-client
+
+#Se clona la aplicación desde GitHub a una carpeta temporal
+cd /tmp
+git clone https://github.com/josejuansanchez/iaw-practica-lamp.git
+
+#se limpia el directorio web actual y copiamos los archivos de la aplicación
+sudo rm -r /var/www/html/*
+sudo cp -rf iaw-practica-lamp/src/* /var/www/html/
+
+#Se configura los permisos y el propietario de los archivos para que Apache pueda acceder correctamente
+sudo chown -R www-data:www-data /var/www/html
+sudo chmod -R 755 /var/www/html
+
+#Configuramos la conexión a la base de datos en config.php, cambiando los datos por defecto por los correspondientes a la base de datos
+sudo sed -i "s/define('DB_HOST'.*/define('DB_HOST', '192.168.0.6');/" /var/www/html/config.php
+sudo sed -i "s/define('DB_NAME'.*/define('DB_NAME', 'lamp_db');/" /var/www/html/config.php
+sudo sed -i "s/define('DB_USER'.*/define('DB_USER', 'uapp');/" /var/www/html/config.php
+sudo sed -i "s/define('DB_PASSWORD'.*/define('DB_PASSWORD', 'papp');/" /var/www/html/config.php
+
+#Se reinicia Apache para que los cambios se lleven a cabo
+sudo systemctl restart apache2
+
+```
+
+## Aprovisionamiento de Mysql (`aprov_mysql.sh`)
+```bash
+#!/bin/bash
+set -e  #detiene el script si hay algún error
+
+#se definen variables que se tendran en cuenta mas adelante
+DB_ROOT_PASS="toor"
+DB_NAME="lamp_db"
+DB_USER="uapp"
+DB_PASS="papp"
+
+#Actualizamos los repositorios
+sudo apt update -y
+
+#Se instala MariaDB Server
+sudo apt install -y mariadb-server
+
+#Configuramos MariaDB para aceptar conexiones externas cambiando el bind-address (desde Apache). Fue uno de los errores que me salieron
+sudo sed -i "s/^bind-address.*/bind-address = 0.0.0.0/" /etc/mysql/mariadb.conf.d/50-server.cnf
+
+#Se habilita y se arranca MariaDB
+systemctl enable mariadb
+systemctl start mariadb
+
+# Creamos la base de datos, el usuario con permisos adecuados y la tabla users que se tomo en cuenta del github de la actividad
+mysql -u root <<CONF
+alter user 'root'@'localhost' identified by '${DB_ROOT_PASS}';
+create database if not exists ${DB_NAME};
+create user if not exists '${DB_USER}'@'192.168.0.5' identified by '${DB_PASS}';
+grant all privileges on ${DB_NAME}.* to '${DB_USER}'@'192.168.0.5';
+flush privileges; 
+
+# Creamos la tabla 'users' si no existe
+use ${DB_NAME};
+CREATE TABLE users (
+  id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+  name VARCHAR(100) NOT NULL,
+  age INT UNSIGNED NOT NULL,
+  email VARCHAR(100) UNIQUE NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+CONF
+
+# Bloqueamos la salida a Internet para la máquina de MariaDB
+ip route del default
+
+# Reinicio final para asegurar que todo se aplica
+sudo systemctl restart mariadb
+
+```
+## Comprobación del estado de los servicios
+
+### Apache
+#### Estado:
+<img width="1041" height="417" alt="imagen" src="https://github.com/user-attachments/assets/4aa9771e-3284-4dba-af1c-ec7e4a85a454" />
+
+#### Conexion desde Apache a MariaDB:
+<img width="732" height="507" alt="imagen" src="https://github.com/user-attachments/assets/57dabfb6-ed61-4940-9edf-0de8d36e04cf" />
+
+### MariaDB
+#### Estado:
+<img width="1442" height="416" alt="imagen" src="https://github.com/user-attachments/assets/8000c430-d75b-41b9-aa91-30c963e405be" />
+
+### Acceso a la aplicacion:
+<img width="1393" height="545" alt="imagen" src="https://github.com/user-attachments/assets/5d88bdfe-88e4-440d-8635-02f981cea0bf" />
+
+
